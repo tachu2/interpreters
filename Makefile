@@ -1,22 +1,24 @@
 JAVAC = javac
 JAVA = java
-MAIN_CLASS = Main
+DIR = java
+PACKAGE = lox
 
-SOURCES = main.java
+BUILD_DIR := build
 
-CLASSES = $(SOURCES:.java=.class)
+SOURCES := $(wildcard $(DIR)/com/craftinginterpreters/$(PACKAGE)/*.java)
+CLASSES := $(addprefix $(BUILD_DIR)/, $(SOURCES:.java=.class))
 
-all: run
+JAVA_OPTIONS := -Werror
 
-run: compile
-	$(JAVA) $(MAIN_CLASS)
+.PHONY: default
+default: $(CLASSES)
+	@: # Don't show "Nothing to be done" output.
 
-compile: $(CLASSES)
+# Compile a single .java file to .class.
+$(BUILD_DIR)/$(DIR)/%.class: $(DIR)/%.java
+	@ mkdir -p $(BUILD_DIR)/$(DIR)
+	@ javac -cp $(DIR) -d $(BUILD_DIR)/$(DIR) $(JAVA_OPTIONS) -implicit:none $<
+	@ printf "%8s %-60s %s\n" javac $< "$(JAVA_OPTIONS)"
 
-%.class: %.java
-	$(JAVAC) $<
-
-clean:
-	rm -f *.class
-
-.PHONY: all compile run clean
+run: default
+	$(JAVA) -cp $(BUILD_DIR) $(DIR)/$(PACKAGE)/Lox
