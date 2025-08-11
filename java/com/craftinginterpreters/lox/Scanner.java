@@ -74,6 +74,8 @@ public class Scanner {
                     while (peek() != '\n' && !isAtEnd()) {
                         advance();
                     }
+                } else if (match('*')) {
+                    blockComment();
                 } else {
                     addToken(TokenType.SLASH);
                 }
@@ -103,6 +105,11 @@ public class Scanner {
         return isAlpha(c) || isDigit(c);
     }
 
+    /**
+     * Checks if the character is an alphabetic character or an underscore.
+     * @param c
+     * @return true if the character is an alphabetic character or an underscore, false otherwise.
+     */
     private boolean isAlpha(char c) {
         return (c >= 'a' && c <= 'z') ||
                (c >= 'A' && c <= 'Z') ||
@@ -123,6 +130,19 @@ public class Scanner {
             type = TokenType.IDENTIFIER;
         }
         addToken(type);
+    }
+
+    private void blockComment() {
+        while (!isAtEnd()) {
+            char c = advance();
+            if (c == '*' && match('/')) {
+                return;
+            }
+            if (c == '\n') {
+                line++;
+            }
+        }
+        Lox.error(line, "Unterminated comment.");
     }
 
     private void number() {
@@ -164,6 +184,10 @@ public class Scanner {
         addToken(TokenType.STRING, value);
     }
 
+    /**
+     * Returns the current character without advancing the current character.
+     * @return the current character or '\0' if at the end of the source.
+     */
     private char peek() {
         if (isAtEnd()) {
             return '\0';
@@ -171,7 +195,11 @@ public class Scanner {
         return source.charAt(current);
     }
 
-    // conditional advance
+    /**
+     * Advances the current character if it matches the expected character.
+     * @param expected
+     * @return true if the current character matches the expected character, false otherwise.
+     */
     private boolean match(char expected) {
         if (isAtEnd()) {
             return false;
@@ -183,6 +211,10 @@ public class Scanner {
         return true;
     }
 
+    /**
+     * Advances the current character and returns the current character.
+     * @return the current character.
+     */
     private char advance() {
         return source.charAt(current++);
     }
