@@ -20,5 +20,13 @@ $(BUILD_DIR)/$(DIR)/%.class: $(DIR)/%.java
 	@ javac -cp $(DIR) -d $(BUILD_DIR)/$(DIR) $(JAVA_OPTIONS) -implicit:none $<
 	@ printf "%8s %-60s %s\n" javac $< "$(JAVA_OPTIONS)"
 
+.PHONY: run
 run: default
-	$(JAVA) -cp $(BUILD_DIR) $(DIR)/$(PACKAGE)/Lox
+	./jlox
+
+.PHONY: clean
+clean:
+	rm -rf $(BUILD_DIR)
+
+.PHONY: re
+re: clean default
