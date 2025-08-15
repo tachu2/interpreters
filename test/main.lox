@@ -1,5 +1,14 @@
-print 1 / 10;
+//print 1 / 10;
 print ( 1 + 2 * 3 / 2) + (0.1 * 2 * 4);
 print true;
 print false;
 print "lox!";
+
+
+/**
+ *
+ *
+ * comment
+ *
+ *
+ */
