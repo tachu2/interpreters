@@ -1,6 +1,2 @@
-fun main() {
-    // commnent should be ignored
-    var a = 1;
-    var b = 1;
-    return a + b;
-}
+1 / 0
+( 1 + 2 * 3 / 2) + (0.1 * 2 * 4)
