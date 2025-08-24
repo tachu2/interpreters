@@ -1,0 +1,6 @@
+var a = "global a";
+var b;
+var c;
+print a;
+print b;
+print c;
