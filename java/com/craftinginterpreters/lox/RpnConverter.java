@@ -28,7 +28,17 @@ class RpnConverter implements Expr.Visitor<String> {
     public String visitUnaryExpr(Expr.Unary expr) {
         return expr.operator.lexeme + expr.right.accept(this);
     }
-    
+
+    @Override
+    public String visitVariableExpr(Expr.Variable expr) {
+        return expr.name.lexeme;
+    }
+
+    @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        return expr.name.lexeme + " " + expr.value.accept(this);
+    }
+
     public static void main(String[] args) {
         Expr expression = new Expr.Binary(
             new Expr.Grouping(new Expr.Binary(new Expr.Literal(1),new Token(TokenType.PLUS, "+", null, 1), new Expr.Literal(2))),
