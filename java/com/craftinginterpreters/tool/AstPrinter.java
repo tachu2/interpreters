@@ -1,4 +1,15 @@
-package com.craftinginterpreters.lox;
+package com.craftinginterpreters.tool;
+
+import com.craftinginterpreters.lox.Expr;
+import com.craftinginterpreters.lox.Token;
+import com.craftinginterpreters.lox.TokenType;
+import com.craftinginterpreters.lox.Expr.Assign;
+import com.craftinginterpreters.lox.Expr.Binary;
+import com.craftinginterpreters.lox.Expr.Grouping;
+import com.craftinginterpreters.lox.Expr.Literal;
+import com.craftinginterpreters.lox.Expr.Unary;
+import com.craftinginterpreters.lox.Expr.Variable;
+import com.craftinginterpreters.lox.Expr.Visitor;
 
 class AstPrinter implements Expr.Visitor<String> {
     String print(Expr expression) {
