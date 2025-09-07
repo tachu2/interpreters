@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Parser {
     private static class ParseError extends RuntimeException {}
+    private static final int MAX_ARGUMENTS = 255;
 
     private final List<Token> tokens;
     private int current = 0;
@@ -260,7 +261,34 @@ public class Parser {
             Expr right = unary();
             return new Expr.Unary(operator, right);
         }
-        return primary();
+        return call();
+    }
+
+    private Expr finishCall(Expr callee) {
+        List<Expr> arguments = new ArrayList<>();
+        if (!check(TokenType.RIGHT_PAREN)) {
+            do {
+                if (arguments.size() >= MAX_ARGUMENTS) {
+                    error(peek(), "Cannot have more than " + MAX_ARGUMENTS + " arguments.");
+                }
+                arguments.add(expression());
+            } while (match(TokenType.COMMA));
+        }
+        Token paren = consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.");
+        return new Expr.Call(callee, paren, arguments);
+    }
+
+    private Expr call() {
+        Expr expr = primary();
+        while (true) {
+            if (match(TokenType.LEFT_PAREN)) {
+                expr = finishCall(expr);
+            } else {
+                break;
+            }
+        }
+
+        return expr;
     }
 
     /**
