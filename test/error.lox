@@ -1,0 +1,6 @@
+fun f(a) {
+    var a = "fuck";
+    print a;
+}
+
+f(1);
