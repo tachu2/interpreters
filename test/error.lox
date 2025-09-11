@@ -4,3 +4,10 @@ fun f(a) {
 }
 
 f(1);
+
+fun bad() {
+    var a = "first";
+    var a = "second";
+}
+
+return "test";
