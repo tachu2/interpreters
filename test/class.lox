@@ -1,0 +1,7 @@
+class Bacon {
+    eat() {
+        print "be be be becon";
+    }
+}
+
+Bacon().eat();

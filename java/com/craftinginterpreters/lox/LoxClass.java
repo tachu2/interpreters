@@ -5,11 +5,18 @@ import java.util.Map;
 
 public class LoxClass implements LoxCallable {
     final String name;
-    final Map<String, LoxFucntion> methods;
+    private final Map<String, LoxFucntion> methods;
 
     LoxClass(String name, Map<String, LoxFucntion> methods) {
         this.name = name;
         this.methods = methods;
+    }
+
+    LoxFucntion findMethod(String name) {
+        if (methods.containsKey(name)) {
+            return methods.get(name);
+        }
+        return null;
     }
 
     @Override
