@@ -94,7 +94,7 @@ public class Parser {
             consume(TokenType.IDENTIFIER, "Expect superclass name.");
             superclass = new Expr.Variable(previous());
         }
-        consume(TokenType.LEFT_BRACE, "Expect '{' after class name.");
+        consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
 
         List<Stmt.Function> methods = new ArrayList<>();
         while (!check(TokenType.RIGHT_BRACE) && !isAtEnd()) {
