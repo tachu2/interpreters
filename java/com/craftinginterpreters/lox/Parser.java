@@ -371,6 +371,9 @@ public class Parser {
             consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
+        if (match(TokenType.THIS)) {
+            return new Expr.This(previous());
+        }
         if (match(TokenType.IDENTIFIER)) {
             return new Expr.Variable(previous());
         }
