@@ -2,6 +2,7 @@
 #define CHUNK_H
 
 #include "common.h"
+#include "value.h"
 
 
  typedef enum {
@@ -16,11 +17,18 @@
    int count; //number of elements in the array
    int capacity; //number of elements the array can hold
    uint8_t* code;
+   ValueArray constants; // constant pool(定数プール)
  } Chunk;
-
 
  void initChunk(Chunk* chunk);
  void writeChunk(Chunk* chunk, uint8_t byte);
  void freeChunk(Chunk* chunk);
+ /**
+  * Adds a constant to the constant pool.
+  * @param chunk the chunk to add the constant to
+  * @param value the constant to add
+  * @return the index of the constant in the constant pool
+  */
+ int addConstant(Chunk* chunk, Value value);
 
 #endif
