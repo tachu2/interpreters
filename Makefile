@@ -42,6 +42,7 @@ clean:
 	rm -rf $(OBJS_DIR)
 	rm -f $(NAME)
 
+.PHONY: clox
 clox:
 	@ $(MAKE) -f c.make BUILD_DIR=$(OBJS_DIR) NAME=$(NAME)
 

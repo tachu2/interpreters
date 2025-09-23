@@ -19,5 +19,3 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	@ $(CC) -c $(CFLAGS) -o $@ $<
 
 -include $(DEPS)
-
-.PHONY: default
