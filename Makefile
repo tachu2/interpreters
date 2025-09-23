@@ -33,8 +33,8 @@ $(AST_FILES): $(DIR)/com/craftinginterpreters/tool/GenerateAst.java
 	java -cp $(BUILD_DIR)/$(DIR) com.craftinginterpreters.tool.GenerateAst $(DIR)/com/craftinginterpreters/lox
 
 .PHONY: run
-run: default
-	./jlox
+run: all
+	./clox
 
 .PHONY: clean
 clean:
