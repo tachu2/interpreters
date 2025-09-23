@@ -14,6 +14,8 @@ JAVA_OPTIONS := -Werror
 # ASTファイルのパスを定義
 AST_FILES := $(DIR)/com/craftinginterpreters/lox/Expr.java $(DIR)/com/craftinginterpreters/lox/Stmt.java
 
+all: $(NAME)
+
 .PHONY: default
 default: $(CLASSES)
 	@: # Don't show "Nothing to be done" output.
@@ -44,4 +46,4 @@ clox:
 	@ $(MAKE) -f c.make BUILD_DIR=$(OBJS_DIR) NAME=$(NAME)
 
 .PHONY: re
-re: clean default
+re: clean all
