@@ -2,8 +2,9 @@ JAVAC = javac
 JAVA = java
 DIR = java
 PACKAGE = lox
-
+NAME := clox
 BUILD_DIR := build
+OBJS_DIR := objs
 
 SOURCES := $(wildcard $(DIR)/com/craftinginterpreters/$(PACKAGE)/*.java)
 CLASSES := $(addprefix $(BUILD_DIR)/, $(SOURCES:.java=.class))
@@ -36,6 +37,11 @@ run: default
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -rf $(OBJS_DIR)
+	rm -f $(NAME)
+
+clox:
+	@ $(MAKE) -f c.make BUILD_DIR=$(OBJS_DIR) NAME=$(NAME)
 
 .PHONY: re
 re: clean default
