@@ -55,3 +55,20 @@ int addConstant(Chunk* chunk, Value value) {
     writeValueArray(&(chunk->constants), value);
     return chunk->constants.count - 1;
 }
+
+void writeConstant(Chunk* chunk, Value value, int line) {
+    int constant = addConstant(chunk, value);
+    if (constant <= UINT8_MAX) {
+        writeChunk(chunk, OP_CONSTANT, line);
+        writeChunk(chunk, constant, line);
+    } else {
+        writeChunk(chunk, OP_CONSTANT_LONG, line);
+        // example: 1123456789 2345678901 3456789012
+        // 下位一バイト 3456789012
+        // 中位一バイト 2345678901
+        // 上位一バイト 1123456789
+        writeChunk(chunk, (uint8_t)(constant & UINT8_MAX), line); // 下位一バイト
+        writeChunk(chunk, (uint8_t)((constant >> 8) & UINT8_MAX), line);
+        writeChunk(chunk, (uint8_t)((constant >> 16) & UINT8_MAX), line); // 上位一バイト
+    }
+}
