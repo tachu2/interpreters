@@ -17,11 +17,12 @@
    int count; //number of elements in the array
    int capacity; //number of elements the array can hold
    uint8_t* code;
+   int* lines; // line numbers for each bytecode
    ValueArray constants; // constant pool(定数プール)
  } Chunk;
 
  void initChunk(Chunk* chunk);
- void writeChunk(Chunk* chunk, uint8_t byte);
+ void writeChunk(Chunk* chunk, uint8_t byte, int line);
  void freeChunk(Chunk* chunk);
  /**
   * Adds a constant to the constant pool.
