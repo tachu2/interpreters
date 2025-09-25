@@ -9,16 +9,27 @@
   OP_RETURN,
  } OpCode;
 
+typedef struct {
+  int line;
+  int count;
+} LineRun;
+
+typedef struct {
+  int count; //number of elements in the array
+  int capacity; //number of elements the array can hold
+  LineRun* runs;
+} LineRuns;
+
 /**
  * A chunk is a sequence of bytes that represents a program.
  * dynamic array of bytes
  */
  typedef struct {
-   int count; //number of elements in the array
-   int capacity; //number of elements the array can hold
-   uint8_t* code;
-   int* lines; // line numbers for each bytecode
-   ValueArray constants; // constant pool(定数プール)
+  int count; //number of elements in the array
+  int capacity; //number of elements the array can hold
+  uint8_t* code;
+  LineRuns lines; // line numbers for each bytecode
+  ValueArray constants; // constant pool(定数プール)
  } Chunk;
 
  void initChunk(Chunk* chunk);
