@@ -3,8 +3,13 @@
 #include "memory.h"
 #include "debug.h"
 #include "vm.h"
+#include <stdio.h>
 
 int main(int argc, const char* argv[]) {
+    int arr[] = {1, 2, 3, 4, 5};
+    int* ptr = &arr[2];
+    printf("%d\n", ptr[-1]);
+    printf("%d\n", ptr[1]);
     initVM();
     Chunk chunk;
     initChunk(&chunk);
