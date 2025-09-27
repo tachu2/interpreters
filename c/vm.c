@@ -28,6 +28,18 @@ Value pop() {
 static InterpretResult run() {
     #define READ_BYTE() (*vm.ip++)
     #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
+    /**
+     * do whileを使うことでマクロ内で複数の文をブロック内で書くことができる
+     * マクロの裏技的なテクニック
+     * do whileを使わないでif文の条件分岐をするとセミコロンを使ったタイミングでマクロの処理が終わりと認識される
+    */
+    #define BINARY_OP(op) { \
+        do { \
+            Value b = pop(); \
+            Value a = pop(); \
+            push(a op b); \
+        } while (false); \
+    }
     for (;;) {
         #ifdef DEBUG_TRACE_EXECUTION
         printf("          ");
@@ -47,6 +59,22 @@ static InterpretResult run() {
                 push(constant);
                 break;
             }
+            case OP_ADD: {
+                BINARY_OP(+);
+                break;
+            }
+            case OP_SUBTRACT: {
+                BINARY_OP(-);
+                break;
+            }
+            case OP_MULTIPLY: {
+                BINARY_OP(*);
+                break;
+            }
+            case OP_DIVIDE: {
+                BINARY_OP(/);
+                break;
+            }
             case OP_NEGATE: {
                 push(-pop());
                 break;
@@ -59,6 +87,7 @@ static InterpretResult run() {
     }
     #undef READ_BYTE
     #undef READ_CONSTANT
+    #undef BINARY_OP
 }
 
 InterpretResult interpret(Chunk* chunk) {
