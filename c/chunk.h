@@ -16,7 +16,7 @@
  typedef struct {
    int count; //number of elements in the array
    int capacity; //number of elements the array can hold
-   uint8_t* code;
+   uint8_t* code; // code of the program
    int* lines; // line numbers for each bytecode
    ValueArray constants; // constant pool(定数プール)
  } Chunk;

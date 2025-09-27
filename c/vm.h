@@ -1,0 +1,26 @@
+#ifndef VM_H
+#define VM_H
+
+#include "chunk.h"
+
+typedef struct {
+    Chunk* chunk;
+    uint8_t* ip; // next instruction pointer
+} VM;
+
+typedef enum {
+    INTERPRET_OK,
+    INTERPRET_COMPILE_ERROR,
+    INTERPRET_RUNTIME_ERROR,
+} InterpretResult;
+
+void initVM();
+void freeVM();
+/**
+ * Interprets a chunk of code.
+ * @param chunk the chunk to interpret
+ * @return the result of the interpretation
+ */
+InterpretResult interpret(Chunk* chunk);
+
+#endif
