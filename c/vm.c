@@ -30,18 +30,30 @@ static InterpretResult run() {
     #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
     for (;;) {
         #ifdef DEBUG_TRACE_EXECUTION
+        printf("          ");
+        for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
+            printf("[ ");
+            printValue(*slot);
+            printf(" ]");
+        }
+        printf("\n");
         disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
         #endif
         uint8_t instruction;
         switch (instruction = READ_BYTE()) {
             // dispatching, decoding instruction
             case OP_CONSTANT: {
-                uint8_t constant = READ_CONSTANT();
-                printValue(constant);
-                printf("\n");
+                Value constant = READ_CONSTANT();
+                push(constant);
+                break;
+            }
+            case OP_NEGATE: {
+                push(-pop());
                 break;
             }
             case OP_RETURN:
+                printValue(pop());
+                printf("\n");
                 return INTERPRET_OK;
         }
     }
