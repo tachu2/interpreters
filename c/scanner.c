@@ -16,6 +16,10 @@ void initScanner(const char* source) {
     scanner.line = 1;
 }
 
+static bool isAlpha(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+}
+
 static bool isAtEnd() {
     return *scanner.current == '\0';
 }
@@ -98,6 +102,17 @@ static void skipWhitespace() {
     }
 }
 
+static TokenType identifierType() {
+    return TOKEN_IDENTIFIER;
+}
+
+static Token identifier() {
+    while (isAlpha(peek()) || isdigit((int)peek())) {
+        advance();
+    }
+    return makeToken(identifierType());
+}
+
 static Token number() {
     while (isdigit((int)peek())) {
         advance();
@@ -136,6 +151,9 @@ Token scanToken() {
     }
 
     char c = advance();
+    if (isAlpha(c)) {
+        return identifier();
+    }
     if (isdigit((int)c)) {
         return number();
     }
