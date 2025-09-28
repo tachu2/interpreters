@@ -25,7 +25,7 @@ void freeVM();
  * @param chunk the chunk to interpret
  * @return the result of the interpretation
  */
-InterpretResult interpret(Chunk* chunk);
+InterpretResult interpret(const char* source);
 void push(Value value);
 Value pop();
 
