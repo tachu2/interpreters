@@ -28,6 +28,17 @@ static char advance() {
     return scanner.current[-1];
 }
 
+static char peek() {
+    return *scanner.current;
+}
+
+static char peekNext() {
+    if (isAtEnd()) {
+        return '\0';
+    }
+    return scanner.current[1];
+}
+
 /**
  * Checks if the next character to be scanned matches the expected character.
  * If it does, advances the current character and returns true.
@@ -56,7 +67,38 @@ static Token errorToken(const char* message) {
     return token;
 }
 
+static void skipWhitespace() {
+    for (;;) {
+        char c = peek();
+        switch (c) {
+            case ' ':
+            case '\r':
+            case '\t':
+                advance();
+                break;
+            case '\n': {
+                scanner.line++;
+                advance();
+                break;
+            }
+            case '/': {
+                if (peekNext() != '/') {
+                    return;
+                }
+                while (peek() != '\n' && !isAtEnd()) {
+                    advance();
+                }
+                break;
+            }
+            default: {
+                return;
+            }
+        }
+    }
+}
+
 Token scanToken() {
+    skipWhitespace();
     scanner.start = scanner.current;
 
     if (isAtEnd()) {
