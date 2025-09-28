@@ -1,4 +1,5 @@
 #include "scanner.h"
+#include <ctype.h>
 #include <string.h>
 
 typedef struct {
@@ -97,6 +98,35 @@ static void skipWhitespace() {
     }
 }
 
+static Token number() {
+    while (isdigit((int)peek())) {
+        advance();
+    }
+
+    if (peek() == '.' && isdigit((int)peekNext())) {
+        // consume the '.'
+        advance();
+        while (isdigit((int)peek())) {
+            advance();
+        }
+    }
+
+    return makeToken(TOKEN_NUMBER);
+}
+
+static Token string() {
+    while (peek() != '"' && !isAtEnd()) {
+        advance();
+    }
+    if (isAtEnd()) {
+        return errorToken("Unterminated string.");
+    }
+
+    // remove the leading and trailing quotes
+    advance();
+    return makeToken(TOKEN_STRING);
+}
+
 Token scanToken() {
     skipWhitespace();
     scanner.start = scanner.current;
@@ -106,6 +136,9 @@ Token scanToken() {
     }
 
     char c = advance();
+    if (isdigit((int)c)) {
+        return number();
+    }
 
     switch (c) {
         case '(': {
@@ -152,6 +185,9 @@ Token scanToken() {
         }
         case '>': {
             return makeToken(match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
+        }
+        case '"': {
+            return string();
         }
     }
 
