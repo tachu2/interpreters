@@ -258,6 +258,14 @@ static void parsePrecedence(Precedence precedence) {
         return;
     }
     prefixRule();
+
+    // 常に前後の演算子の優先順位を比較する
+    // なぜなら次のtokenが演算子ではない場合は、binaryを呼び出して処理されるから
+    while (precedence <= getRule(parser.current.type)->precedence) {
+        advance();
+        ParseFn infixRule = getRule(parser.previous.type)->infix;
+        infixRule();
+    }
 }
 
 static ParseRule* getRule(TokenType type) {
