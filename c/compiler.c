@@ -22,6 +22,7 @@ typedef enum {
   PREC_ASSIGNMENT,  // =
   PREC_OR,          // or
   PREC_AND,         // and
+  PREC_TERNARY, // ? :
   PREC_EQUALITY,    // == !=
   PREC_COMPARISON,  // < > <= >=
   PREC_TERM,        // + -
@@ -138,6 +139,14 @@ static void expression();
 static ParseRule* getRule(TokenType type);
 static void parsePrecedence(Precedence precedence);
 
+static void ternary() {
+    parsePrecedence(PREC_TERNARY + 1);
+
+    consume(TOKEN_COLON, "Expect ':' after true expression.");
+
+    parsePrecedence(PREC_TERNARY + 1);
+}
+
 /**
  * 二項演算子: + - * /
  * 
@@ -223,6 +232,8 @@ ParseRule rules[] = {
   [TOKEN_SEMICOLON]     = {NULL,     NULL,   PREC_NONE},
   [TOKEN_SLASH]         = {NULL,     binary, PREC_FACTOR},
   [TOKEN_STAR]          = {NULL,     binary, PREC_FACTOR},
+  [TOKEN_QUESTION]      = {NULL,     ternary, PREC_TERNARY},
+  [TOKEN_COLON]         = {NULL,     NULL,   PREC_NONE},
   [TOKEN_BANG]          = {NULL,     NULL,   PREC_NONE},
   [TOKEN_BANG_EQUAL]    = {NULL,     NULL,   PREC_NONE},
   [TOKEN_EQUAL]         = {NULL,     NULL,   PREC_NONE},
