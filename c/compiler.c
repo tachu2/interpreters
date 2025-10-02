@@ -1,5 +1,6 @@
 #include "compiler.h"
 #include "scanner.h"
+#include "debug.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -126,6 +127,11 @@ static uint8_t emitConstant(Value value) {
 
 static void endCompiler() {
     emitReturn();
+#ifdef DEBUG_PRINT_CODE
+    if (!parser.hadError) {
+        disassembleChunk(currentChunk(), "code");
+    }
+#endif
 }
 
 static void expression();
@@ -175,7 +181,8 @@ static void grouping() {
 
 static void number() {
     double value = strtod(parser.previous.start, NULL);
-    emitConstant(value);
+    uint8_t constant = emitConstant(value);
+    emitBytes(OP_CONSTANT, constant);
 }
 
 
