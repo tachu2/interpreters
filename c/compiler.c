@@ -181,7 +181,7 @@ static void grouping() {
 
 static void number() {
     double value = strtod(parser.previous.start, NULL);
-    uint8_t constant = emitConstant(value);
+    uint8_t constant = emitConstant(NUMBER_VAL(value));
     emitBytes(OP_CONSTANT, constant);
 }
 
