@@ -41,3 +41,24 @@ void printValue(Value value) {
             break;
     }
 }
+
+bool valuesEqual(Value a, Value b) {
+    if (a.type != b.type) {
+        return false;
+    }
+    // memcmpで比較しない理由は、paddingとサイズの異なる共用体フィールドのせいで、Valueに未使用のbit群が含まれるから
+    switch (a.type) {
+        case VAL_BOOL: {
+            return AS_BOOL(a) == AS_BOOL(b);
+        }
+        case VAL_NIL: {
+            return true;
+        }
+        case VAL_NUMBER: {
+            return AS_NUMBER(a) == AS_NUMBER(b);
+        }
+        default: {
+            return false;
+        }
+    }
+}
