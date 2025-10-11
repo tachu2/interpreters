@@ -32,6 +32,8 @@ struct ObjString {
     char* chars;
 };
 
+ObjString* copyString(const char* chars, int length);
+
 /**
  * 関数にする理由は、引数のvalueを二度使うから
  * マクロの場合、同じパラメータをなんども使うと、その式を何度も評価してしまう
