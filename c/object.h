@@ -33,6 +33,7 @@ struct ObjString {
 };
 
 ObjString* copyString(const char* chars, int length);
+void printObject(Value value);
 
 /**
  * 関数にする理由は、引数のvalueを二度使うから
