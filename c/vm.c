@@ -53,8 +53,8 @@ static bool isFalsey(Value value) {
 }
 
 static void concatenate() {
-    ObjString* aString = AS_STRING(pop());
     ObjString* bString = AS_STRING(pop());
+    ObjString* aString = AS_STRING(pop());
 
     int length = aString->length + bString->length;
     char* chars = ALLOCATE(char, length + 1);

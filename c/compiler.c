@@ -234,7 +234,8 @@ static void number() {
 }
 
 static void string() {
-    emitConstant(OBJ_VAL((Obj*)copyString(parser.previous.start + 1, parser.previous.length - 2)));
+    uint8_t constant = emitConstant(OBJ_VAL((Obj*)copyString(parser.previous.start + 1, parser.previous.length - 2)));
+    emitBytes(OP_CONSTANT, constant);
 }
 
 /**
