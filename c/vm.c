@@ -27,9 +27,11 @@ static void runtimeError(const char* message, ...) {
 
 void initVM() {
     resetStack();
+    vm.objects = NULL;
 }
 
 void freeVM() {
+    freeObjects();
 }
 
 void push(Value value) {
@@ -51,8 +53,6 @@ static bool isFalsey(Value value) {
 }
 
 static void concatenate() {
-    Value b = pop();
-    Value a = pop();
     ObjString* aString = AS_STRING(pop());
     ObjString* bString = AS_STRING(pop());
 
@@ -63,7 +63,7 @@ static void concatenate() {
     chars[length] = '\0';
 
     ObjString* result = takeString(chars, length);
-    push(OBJ_VAL(result));
+    push(OBJ_VAL((Obj*)result));
 }
 
 static InterpretResult run() {

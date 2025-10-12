@@ -1,19 +1,23 @@
 #include "object.h"
 #include "memory.h"
+#include "vm.h"
 #include <stdio.h>
 #include <string.h>
 
 #define ALLOCATE_OBJ(type, objType) \
     (type*)allocateObject(sizeof(type), objType)
 
-static void* allocateObject(size_t size, ObjType type) {
-    Obj* ptr = (Obj*)reallocate(NULL, 0, size);
-    ptr->type = type;
-    return ptr;
+static Obj* allocateObject(size_t size, ObjType type) {
+    Obj* object = (Obj*)reallocate(NULL, 0, size);
+    object->type = type;
+
+    object->next = vm.objects;
+    vm.objects = object;
+    return object;
 }
 
 static ObjString* allocateString(char* chars, int length) {
-    ObjString* string = ALLOCATE(ObjString, 1);
+    ObjString* string = ALLOCATE_OBJ(ObjString, OBJ_STRING);
     string->length = length;
     string->chars = chars;
     return string;

@@ -14,6 +14,8 @@
 #define FREE_ARRAY(type, pointer, oldCount) \
     reallocate(pointer, sizeof(type) * (oldCount), 0)
 
+#define FREE(type, pointer) reallocate(pointer, sizeof(type), 0)
+
 /**
  * Reallocates memory.
  * @param pointer the pointer to the memory to reallocate
@@ -22,5 +24,6 @@
  * @return the pointer to the reallocated memory
  */
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
+void freeObjects();
 
 #endif
