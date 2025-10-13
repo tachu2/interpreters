@@ -17,15 +17,40 @@ void freeTable(Table* table) {
 
 static Entry* findEntry(Entry* entries, int capacity, ObjString* key) {
     uint32_t index = key->hash % capacity;
+    Entry* tombstone = NULL;
+
     for (;;) {
         Entry* entry = &entries[index];
-        if (entry->key == key || entry->key == NULL) {
+        if (entry->key == NULL) {
+            // entryが空いている場合
+            if (IS_NIL(entry->value)) {
+                // 新しいnodeをsetするときに使用するために、tombstoneを返す
+                return tombstone != NULL ? tombstone : entry;
+            } else {
+                // entryがtombstoneの場合
+                if (tombstone == NULL) {
+                    tombstone = entry;
+                }
+            }
+        } else if (entry->key == key) {
             return entry;
         }
         // collision衝突が発生
         // linear probing線形探索で次のインデックスを探す
         index = (index + 1) % capacity;
     }
+}
+
+bool tableGet(Table* table, ObjString* key, Value* value) {
+    if (table->count == 0) {
+        return false;
+    }
+    Entry* entry = findEntry(table->entries, table->capacity, key);
+    if (entry->key == NULL) {
+        return false;
+    }
+    *value = entry->value;
+    return true;
 }
 
 /**
@@ -41,6 +66,7 @@ static void adjustCapacity(Table* table, int capacity) {
         newEntries[i].value = NIL_VAL;
     }
 
+    table->count = 0;
     for (int i = 0; i < table->capacity; i++) {
         Entry* entry = &table->entries[i];
         if (entry->key == NULL) {
@@ -49,6 +75,7 @@ static void adjustCapacity(Table* table, int capacity) {
         Entry* dest = findEntry(newEntries, capacity, entry->key);
         dest->key = entry->key;
         dest->value = entry->value;
+        table->count++;
     }
 
     FREE_ARRAY(Entry, table->entries, table->capacity);
@@ -64,12 +91,35 @@ bool tableSet(Table* table, ObjString* key, Value value) {
     }
     Entry* entry = findEntry(table->entries, table->capacity, key);
     bool isNewKey = entry->key == NULL;
-    if (isNewKey) {
+    // tombstoneも占有率に含める
+    if (isNewKey && IS_NIL(entry->value)) {
         table->count++;
     }
     entry->key = key;
     entry->value = value;
     return isNewKey;
+}
+
+/**
+ * キーを削除する
+ * entryのクリアするだけでなく、tombstoneを使って削除を表現する
+ * そうすることで、keyのindexが重複している場合でも、keyを見つけることができる
+ * @param table the table to delete the key from
+ * @param key the key to delete
+ * @return true if the key was deleted, false otherwise
+ */
+bool tableDelete(Table* table, ObjString* key) {
+    if (table->count == 0) {
+        return false;
+    }
+    Entry* entry = findEntry(table->entries, table->capacity, key);
+    if (entry->key == NULL) {
+        return false;
+    }
+    entry->key = NULL;
+    // tombstoneを使って削除を表現する
+    entry->value = BOOL_VAL(true);
+    return true;
 }
 
 void tableAddAll(Table* from, Table* to) {
