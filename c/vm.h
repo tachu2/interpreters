@@ -2,6 +2,7 @@
 #define VM_H
 
 #include "chunk.h"
+#include "table.h"
 
 #define STACK_MAX 256
 
@@ -10,6 +11,7 @@ typedef struct {
     uint8_t* ip; // next instruction pointer
     Value stack[STACK_MAX];
     Value* stackTop; // next free slot in the stack
+    Table strings; // すべての文字列を格納するテーブル
     Obj* objects;
 } VM;
 
